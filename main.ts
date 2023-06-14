@@ -125,26 +125,24 @@ namespace k210_models {
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
     export function Barcode_Sensor(): string {
-	   let  Barcode= ""
-       let start = 0
-       let length = 0
-      if (("" + serial.readString()).includes("$")) {
-        basic.pause(200)
-        length = parseFloat(serial.readString().substr(3, 2))
-        basic.pause(200)
-        if (length > 10 || length == 10) {
-            start = 5
-        } else {
-            start = 4
-        }
-        basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "02") {
+        let rev = ""
+        let Barcode = ""
+        let len = 0
+        let length = 0
+        if (("" + serial.readString()).includes("$")) {
             basic.pause(200)
-            Barcode = ("" + serial.readString()).substr(start, length)
+            length = ("" + serial.readString()).length
+            len = length - 5
+            basic.pause(200)
+            if (("" + serial.readString()).substr(1, 2) == "02") {
+                basic.pause(200)
+                Barcode = ("" + serial.readString()).substr(3, len)
+                rev = Barcode
+            } else {
+                rev = ""
+            }
         }
-    }
-    
-    return Barcode
+        return rev
 
     }
 
