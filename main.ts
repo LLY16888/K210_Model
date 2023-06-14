@@ -297,17 +297,24 @@ let object = ""
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
     export function Color_Sensor(): string {
-        let color=""
-	   if (("" + serial.readString()).includes("#")) {
-        basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "01") {
-            basic.pause(200)
-            color = ("" + serial.readString()).substr(3, 1)
+        let Color = ""
+        let class_num = ""
+        let opo = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            if (class_num == "01") {
+                Color = opo.substr(3, 1)
+            } else {
+                Color = ""
+            }
+        } else {
+            Color = ""
         }
-    }
-    return color
+        opo = ""
+        return Color
 
-    }    
+    }     
 
     //% blockId=k210_models_Apriltag_id block="Apriltag_id return"
     //% weight=100
