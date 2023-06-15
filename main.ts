@@ -193,6 +193,11 @@ namespace k210_models {
     return apriltag
 
     }
+
+
+
+
+
     //% blockId=k210_models_face_mask_detect block="face_mask Scan return"
     //% weight=100
     //% blockGap=10
@@ -328,6 +333,29 @@ let object = ""
         apriltag = ("" + serial.readString()).substr(3, 2)
     }
     return apriltag 
+
+    }    
+
+
+
+    //% blockId=k210_models_face_detect block="face_detect Scan return"
+    //% weight=100
+    //% blockGap=10
+    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
+    export function face_detect():string{
+        let REV=""
+         if (("" + serial.readString()).includes("$")) {
+            basic.pause(200)
+        if (("" + serial.readString()).substr(1, 2) == "14") {
+            basic.pause(200)
+            if (("" + serial.readString()).substr(3, 1) == "0") {
+                REV = "N"
+            } else {
+                REV = "Y"
+            }
+        }
+    }
+    return REV
 
     }    
 
