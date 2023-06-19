@@ -222,21 +222,21 @@ namespace k210_models {
     //% weight=100
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
-    export function face_reg():string{
-        let face_reg=""
-       if (("" + serial.readString()).includes("$")) {
-        basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "08") {
+    export function face_reg():number{
+        face_reg = -2
+        if (("" + serial.readString()).includes("$")) {
             basic.pause(200)
-            if (("" + serial.readString()).substr(3, 1) == "Y") {
+            if (("" + serial.readString()).substr(1, 2) == "08") {
                 basic.pause(200)
-                face_reg = ("" + serial.readString()).substr(4, 2)
-            } else {
-                face_reg = "N"
+                if (("" + serial.readString()).substr(3, 1) == "Y") {
+                    basic.pause(200)
+                    face_reg = parseFloat(("" + serial.readString()).substr(4, 2))
+                } else {
+                    face_reg = -1
+                }
             }
         }
-    }
-    return face_reg
+        return face_reg
 
     }
 
