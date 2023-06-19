@@ -10,7 +10,8 @@
     "files": [
         "README.md",
         "main.ts",
-        "_locales/zh-cn/k210_module-strings.json"
+        "_locales/zh-cn/k210_module-strings.json",
+        "_locales/zh-tw/k210_module-strings.json"
     ],
     "testFiles": [
         "test.ts"
