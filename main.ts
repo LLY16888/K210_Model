@@ -222,8 +222,8 @@ namespace k210_models {
     //% weight=100
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
-    export function face_reg():number{
-        face_reg = -2
+    export function face_reg(): number{
+        let face_reg = -2
         if (("" + serial.readString()).includes("$")) {
             basic.pause(200)
             if (("" + serial.readString()).substr(1, 2) == "08") {
