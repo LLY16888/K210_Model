@@ -151,18 +151,26 @@ namespace k210_models {
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
     export function QRcode_Sensor(): string {
-	   let _this = ""
-       let length = 0
-    if (("" + serial.readString()).includes("$")) {
-        basic.pause(200)
-        length = parseFloat(("" + serial.readString()).substr(3, 2))
-        basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "03") {
-            basic.pause(500)
-            _this = ("" + serial.readString()).substr(5, length)
+        let apriltag = ""
+let L = 0
+let length = 0
+let class_num = ""
+let opo = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            if (class_num == "03") {
+                length = opo.length
+                L = length - 4
+                apriltag = opo.substr(3, L)
+            } else {
+                apriltag = ""
+            }
+        } else {
+            apriltag = ""
         }
-    }
-    return _this
+        opo = ""
+        return apriltag
 
     }
     
