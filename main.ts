@@ -10,7 +10,6 @@ namespace k210_models {
         SerialPin.P2,
         BaudRate.BaudRate115200
         )
-        basic.showIcon(IconNames.Happy)
     }
 
     //% blockId=k210_models_color_reg_X block="reg_X return"
@@ -125,24 +124,26 @@ namespace k210_models {
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
     export function Barcode_Sensor(): string {
-        let rev = ""
-        let Barcode = ""
-        let len = 0
+        let apriltag = ""
+        let L = 0
         let length = 0
-        if (("" + serial.readString()).includes("$")) {
-            basic.pause(200)
-            length = ("" + serial.readString()).length
-            len = length - 5
-            basic.pause(200)
-            if (("" + serial.readString()).substr(1, 2) == "02") {
-                basic.pause(200)
-                Barcode = ("" + serial.readString()).substr(3, len)
-                rev = Barcode
+        let class_num = ""
+        let opo = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            if (class_num == "02") {
+                length = opo.length
+                L = length - 4
+                apriltag = opo.substr(3, L)
             } else {
-                rev = ""
+                apriltag = ""
             }
+        } else {
+            apriltag = ""
         }
-        return rev
+        opo = ""
+        return apriltag
 
     }
 
@@ -152,10 +153,10 @@ namespace k210_models {
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
     export function QRcode_Sensor(): string {
         let apriltag = ""
-let L = 0
-let length = 0
-let class_num = ""
-let opo = ""
+        let L = 0
+        let length = 0
+        let class_num = ""
+        let opo = ""
         opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
         if (opo[0] == "$") {
             class_num = "" + opo[1] + opo[2]
@@ -211,19 +212,28 @@ let opo = ""
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
     export function face_mask_detect():string{
-        let REV=""
-         if (("" + serial.readString()).includes("$")) {
-            basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "07") {
-            basic.pause(200)
-            if (("" + serial.readString()).substr(3, 1) == "0") {
-                REV = "N"
+        let face = ""
+        let class_num = ""
+        let _22 = ""
+        let opo = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            _22 = opo[3]
+            if (class_num == "07") {
+                if (_22 == "1") {
+                    face = "Y"
+                } else {
+                    face = "N"
+                }
             } else {
-                REV = "Y"
+                face = ""
             }
+        } else {
+            face = ""
         }
-    }
-    return REV
+        opo = ""
+        return face
 
     }
         //% blockId=k210_models_face_reg block="face_reg Scan return"
@@ -232,18 +242,27 @@ let opo = ""
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
     export function face_reg(): number{
         let face_reg = -2
-        if (("" + serial.readString()).includes("$")) {
-            basic.pause(200)
-            if (("" + serial.readString()).substr(1, 2) == "08") {
-                basic.pause(200)
-                if (("" + serial.readString()).substr(3, 1) == "Y") {
-                    basic.pause(200)
-                    face_reg = parseFloat(("" + serial.readString()).substr(4, 2))
-                } else {
+        let class_num = ""
+        let _22 = ""
+        let opo = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            _22 = opo[3]
+            face_reg = parseFloat("" + opo[4] + opo[5])
+            if (class_num == "08") {
+                if (_22 == "Y") {
+                    face_reg = face_reg
+                } else if (_22 == "N") {
                     face_reg = -1
                 }
+            } else {
+                face_reg = -2
             }
+        } else {
+            face_reg = -2
         }
+        opo = ""
         return face_reg
 
     }
@@ -255,35 +274,49 @@ let object = ""
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
     export function object_detect():string{
-    if (("" + serial.readString()).includes("$")) {
-        basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "09") {
-            basic.pause(200)
-            object = ("" + serial.readString()).substr(3, len)
-            basic.pause(200)
-            len = ("" + serial.readString()).length - 5
+        let object = ""
+        let L = 0
+        let length = 0
+        let class_num = ""
+        let opo = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            if (class_num == "09") {
+                length = opo.length
+                L = length - 4
+                object = opo.substr(3, L)
+            } else {
+                object = ""
+            }
         } else {
-            len = 0
             object = ""
         }
-    }
-    return object
+        opo = ""
+        return object
     }
 
     //% blockId=k210_models_self_learning block="self_learning Scan return"
     //% weight=100
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
-    export function self_learning():string{
-        let Object=""
-    if (("" + serial.readString()).includes("#")) {
-        basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "10") {
-            basic.pause(200)
-            Object = ("" + serial.readString()).substr(3, 1)
+    export function self_learning():number{
+        let Learning = -1
+        let opo = ""
+        let class_num = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            if (class_num == "10") {
+                Learning = parseFloat(opo[3])
+            } else {
+                Learning = -1
+            }
+        } else {
+            Learning = -1
         }
-    }
-    return Object
+        opo = ""
+        return Learning
     }
 
 
@@ -292,15 +325,22 @@ let object = ""
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
     export function handwriting_number():number{
-        let number=-1
-        if (("" + serial.readString()).includes("$")) {
-        basic.pause(200)
-    }
-    if (("" + serial.readString()).substr(1, 2) == "11") {
-        basic.pause(200)
-        number =  parseFloat(("" + serial.readString()).substr(3, 1))
-    }
-    return number
+        let number = -1
+        let opo = ""
+        let class_num = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            if (class_num == "11") {
+                number = parseFloat(opo[3])
+            } else {
+                number = -1
+            }
+        } else {
+            number = -1
+        }
+        opo = ""
+        return number
     }
 
     //% blockId=k210_models_Color_Sensor block="Color scan return"
@@ -332,15 +372,22 @@ let object = ""
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
     export function Apriltag_id(): string {
-	   let apriltag = ""
-       if (("" + serial.readString()).includes("$")) {
-        basic.pause(200)
-    }
-    if (("" + serial.readString()).substr(1, 2) == "04") {
-        basic.pause(200)
-        apriltag = ("" + serial.readString()).substr(3, 2)
-    }
-    return apriltag 
+        let Apriltag_id = ""
+        let class_num = "" 
+        let opo = ""        
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            if (class_num == "04") {
+                Apriltag_id = "" + opo[3] + opo[4]
+            } else {
+                Apriltag_id = ""
+            }
+        } else {
+            Apriltag_id = ""
+        }
+        opo = ""
+        return Apriltag_id
 
     }    
 
@@ -351,21 +398,33 @@ let object = ""
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
     export function face_detect():string{
-        let REV=""
-         if (("" + serial.readString()).includes("$")) {
-            basic.pause(200)
-        if (("" + serial.readString()).substr(1, 2) == "14") {
-            basic.pause(200)
-            if (("" + serial.readString()).substr(3, 1) == "0") {
-                REV = "N"
+        let face = ""
+        let class_num = ""
+        let _22 = ""
+        let opo = ""
+        opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+        if (opo[0] == "$") {
+            class_num = "" + opo[1] + opo[2]
+            _22 = opo[3]
+            if (class_num == "14") {
+                if (_22 == "1") {
+                    face = "Y"
+                } else {
+                    face = "N"
+                }
             } else {
-                REV = "Y"
+                face = ""
             }
+        } else {
+            face = ""
         }
-    }
-    return REV
+        opo = ""
+        return face
+    
 
-    }    
+    }   
+    
+    
 
 
 }
