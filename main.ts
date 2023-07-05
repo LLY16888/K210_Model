@@ -165,10 +165,10 @@ namespace k210_models {
                 L = length - 4
                 apriltag = opo.substr(3, L)
             } else {
-                apriltag = ""
+                apriltag = " "
             }
         } else {
-            apriltag = ""
+            apriltag = " "
         }
         opo = ""
         return apriltag
@@ -221,7 +221,7 @@ namespace k210_models {
             class_num = "" + opo[1] + opo[2]
             _22 = opo[3]
             if (class_num == "07") {
-                if (_22 == "1") {
+                if (_22 == "1" || _22 == "Y" ) {
                     face = "Y"
                 } else {
                     face = "N"
@@ -236,34 +236,37 @@ namespace k210_models {
         return face
 
     }
+
+
         //% blockId=k210_models_face_reg block="face_reg Scan return"
     //% weight=100
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=30
     export function face_reg(): number{
-        let face_reg = -2
-        let class_num = ""
+        let face = 0
         let _22 = ""
+        let class_num = ""
         let opo = ""
+        let face_Reg = 0
         opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
         if (opo[0] == "$") {
             class_num = "" + opo[1] + opo[2]
             _22 = opo[3]
-            face_reg = parseFloat("" + opo[4] + opo[5])
+            face_Reg = parseFloat("" + opo[4] + opo[5])
             if (class_num == "08") {
                 if (_22 == "Y") {
-                    face_reg = face_reg
-                } else if (_22 == "N") {
-                    face_reg = -1
+                    face = face_Reg
+                } else {
+                    face = -1
                 }
             } else {
-                face_reg = -2
+                face = -2
             }
         } else {
-            face_reg = -2
+            face = -2
         }
         opo = ""
-        return face_reg
+        return face
 
     }
 
@@ -420,11 +423,73 @@ let object = ""
         }
         opo = ""
         return face
-    
-
     }   
     
-    
+    //% blockId=k210_models_speed_L block="get left motor"
+    //% weight=88
+    //% blockGap=10
+    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
+    export function get_motor_L(): number{
+        let  speed_L= 0
+        let length = 0
+     let class_num = ""
+     let opo = ""
+     opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+     if (opo[0] == "$") {
+         class_num = "" + opo[1] + opo[2]
+         if (class_num == "20") {
+             length = opo.length
+             if(opo[3]=="+")//速度为正
+             {
+                speed_L = parseFloat(opo.substr(4, 3))
+             }
+             else if(opo[3]=="-")
+             {
+                speed_L = -(parseFloat(opo.substr(4, 3)))
+             }
+         } else {
+            speed_L = 0
+         }
+     } else {
+        speed_L = 0
+     }
+     opo = ""
+     return speed_L
+ 
+     }
+
+     //% blockId=k210_models_speed_R block="get right motor"
+    //% weight=88
+    //% blockGap=10
+    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
+    export function get_motor_R(): number{
+        let  speed_R= 0
+        let length = 0
+     let class_num = ""
+     let opo = ""
+     opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+     if (opo[0] == "$") {
+         class_num = "" + opo[1] + opo[2]
+         if (class_num == "20") {
+             length = opo.length
+             if(opo[7]=="+")//速度为正
+             {
+                speed_R = parseFloat(opo.substr(8, 3))
+             }
+             else if(opo[7]=="-")
+             {
+                speed_R = -(parseFloat(opo.substr(8, 3)))
+             }
+         } else {
+            speed_R = 0
+         }
+     } else {
+        speed_R = 0
+     }
+     opo = ""
+     return speed_R
+ 
+     }
 
 
 }
