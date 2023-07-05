@@ -326,7 +326,7 @@ declare namespace input {
      * Get the magnetic force value in ``micro-Teslas`` (``µT``). This function is not supported in the simulator.
      * @param dimension the x, y, or z dimension, eg: Dimension.X
      */
-    //% help=input/magnetic-force weight=51
+    //% help=input/magnetic-force weight=54
     //% blockId=device_get_magnetic_force block="magnetic force (µT)|%NAME" blockGap=8
     //% parts="compass"
     //% advanced=true shim=input::magneticForce
@@ -337,7 +337,7 @@ declare namespace input {
      */
     //% help=input/calibrate-compass advanced=true
     //% blockId="input_compass_calibrate" block="calibrate compass"
-    //% weight=45 shim=input::calibrateCompass
+    //% weight=55 shim=input::calibrateCompass
     function calibrateCompass(): void;
 
     /**
@@ -676,6 +676,15 @@ declare namespace music {
     //% enabled.shadow=toggleOnOff
     //% weight=0 shim=music::setBuiltInSpeakerEnabled
     function setBuiltInSpeakerEnabled(enabled: boolean): void;
+
+    /**
+     * Check whether any sound is being played, no matter the source
+     */
+    //% blockId=music_sound_is_playing block="sound is playing"
+    //% group="Volume"
+    //% help=music/volume
+    //% weight=0 shim=music::isSoundPlaying
+    function isSoundPlaying(): boolean;
 
     /**
      * Defines an optional sample level to generate during periods of silence.

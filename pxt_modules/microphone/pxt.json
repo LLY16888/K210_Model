@@ -17,8 +17,8 @@
     ],
     "public": true,
     "targetVersions": {
-        "target": "5.1.28",
-        "pxt": "8.6.34"
+        "target": "6.1.1",
+        "pxt": "8.6.52"
     },
     "icon": "/static/libs/microphone.png"
 }
