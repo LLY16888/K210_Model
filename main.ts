@@ -425,71 +425,76 @@ let object = ""
         return face
     }   
     
+
+    let  speed_L= 0
+    let  speed_R= 0
+
+    //% blockId=k210_models_get_speed block="analysis speed"
+    //% weight=88
+    //% blockGap=10
+    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
+    export function get_motor_speed(){
+        
+     let class_num = ""
+     let opo = ""
+     opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
+     if (opo[0] == "$") 
+     {
+        class_num = "" + opo[1] + opo[2]
+        if (class_num == "20") 
+        {
+            //左电机
+            if(opo[3]=="+")//速度为正
+            {
+                speed_L = parseFloat(opo.substr(4, 3))
+            }
+            else if(opo[3]=="-")
+            {
+                speed_L = -(parseFloat(opo.substr(4, 3)))
+            }
+
+            //右电机
+            if(opo[7]=="+")//速度为正
+            {
+                speed_R = parseFloat(opo.substr(8, 3))
+            }
+            else if(opo[7]=="-")
+            {
+                speed_R = -(parseFloat(opo.substr(8, 3)))
+            }
+        } 
+         else 
+        {
+            speed_L = 0
+            speed_R = 0
+        }
+     } 
+     else 
+     {
+        speed_L = 0
+        speed_R = 0
+     }
+     opo = ""
+     }
+
+
     //% blockId=k210_models_speed_L block="get left motor"
     //% weight=88
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
-    export function get_motor_L(): number{
-        let  speed_L= 0
-        let length = 0
-     let class_num = ""
-     let opo = ""
-     opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
-     if (opo[0] == "$") {
-         class_num = "" + opo[1] + opo[2]
-         if (class_num == "20") {
-             length = opo.length
-             if(opo[3]=="+")//速度为正
-             {
-                speed_L = parseFloat(opo.substr(4, 3))
-             }
-             else if(opo[3]=="-")
-             {
-                speed_L = -(parseFloat(opo.substr(4, 3)))
-             }
-         } else {
-            speed_L = 0
-         }
-     } else {
-        speed_L = 0
-     }
-     opo = ""
-     return speed_L
- 
-     }
+    export function get_motor_L(): number
+    {  
+        return speed_L
+    }
 
      //% blockId=k210_models_speed_R block="get right motor"
     //% weight=88
     //% blockGap=10
     //% name.fieldEditor="gridpicker" name.fieldOptions.columns=12
-    export function get_motor_R(): number{
-        let  speed_R= 0
-        let length = 0
-     let class_num = ""
-     let opo = ""
-     opo = serial.readUntil(serial.delimiters(Delimiters.Hash))
-     if (opo[0] == "$") {
-         class_num = "" + opo[1] + opo[2]
-         if (class_num == "20") {
-             length = opo.length
-             if(opo[7]=="+")//速度为正
-             {
-                speed_R = parseFloat(opo.substr(8, 3))
-             }
-             else if(opo[7]=="-")
-             {
-                speed_R = -(parseFloat(opo.substr(8, 3)))
-             }
-         } else {
-            speed_R = 0
-         }
-     } else {
-        speed_R = 0
-     }
-     opo = ""
-     return speed_R
- 
-     }
+    export function get_motor_R(): number
+    {
+        return speed_R
+    }
 
 
 }
